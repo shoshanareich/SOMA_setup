@@ -7,8 +7,9 @@
 #SBATCH -n 64
 #SBATCH -t 72:00:00
 
-# Example: 20-year run at tau_max=0.4, started from the year-10 pickup of the
-# tau_max=0.4 branch. Edit the variables below for other scenarios.
+# Example: 20-year run at tau_max=0.4 (daily snapshots), started from the
+# year-90 pickup of the spin-up (run_spinup.sh). Edit the variables below
+# for other scenarios.
 
 nprocs=64
 
@@ -16,8 +17,8 @@ nprocs=64
 basedir=/path/to/SOMA_setup              # this repository
 bindir=/path/to/input_binaries           # output of gendata/ where input binaries are stored
 workdir=/path/to/run_20yrs_tau0.4        # run directory
-pickupdir=/path/to/run_yrspinup_tau0.4 # directory of spin up run
-pickupts=0000259200
+pickupdir=/path/to/run_spinup            # directory of spin up run
+pickupts=0002332800                      # year 90 of the spin-up
 
 mkdir ${workdir}
 cd ${workdir}
