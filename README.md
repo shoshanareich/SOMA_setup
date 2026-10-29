@@ -8,7 +8,7 @@ Wolfram et al. 2015) double-gyre ocean, used to generate the training data for
 The domain is a 248 × 248 × 31 basin at 0.25°, forced by a seasonally varying zonal wind
 stress and relaxation to surface temperature and salinity. Wind scenarios are labelled by
 the peak wind stress `tau_max` (the seasonal cycle runs between 0.1 and `tau_max` N/m²).
-The paper uses `tau_max` = 0.1, 0.2, 0.3, 0.4, 0.5.
+The paper uses `tau_max` = 0.2, 0.3, 0.4, 0.5.
 
 | Path | Contents |
 |---|---|
@@ -18,7 +18,7 @@ The paper uses `tau_max` = 0.1, 0.2, 0.3, 0.4, 0.5.
 | `gendata/` | scripts that write the input binaries (bathymetry, forcing) |
 | `run_spinup.sh` | SLURM job: 100-year spin-up |
 | `run_soma.sh` | SLURM job: 20-year scenario run from the spin-up |
-| `make_states_nc.py` | collects a run's daily snapshots into `states_20yrs.nc` |
+| `make_states_nc.py` | collects a run's daily snapshots into one master file `states_20yrs.nc` |
 
 ## 1. Get MITgcm (checkpoint68q)
 
@@ -91,22 +91,17 @@ Each forcing file holds one 248 × 248 record per model time step (1200 s) for o
 year (~6.4 GB). The model cycles through it every year. `make_wind.py` takes any amplitudes,
 e.g. `--tau-min 0.05 --tau-max 0.35` (default `--tau-min 0.1`).
 
-All files except `bathy4.bin` are byte-identical to the ones used for the paper runs. The
-published runs computed the same SOMA bathymetry on a 1/6° grid and interpolated it linearly
-to 1/4°. `make_bathymetry.py` evaluates it directly on the 1/4° grid, which changes about
-0.5% of the coastline cells and the depth by 7 m rms (mostly on the steep slope).
-
 ## 4. Spin-up
 
 Edit the three paths at the top of `run_spinup.sh` (`basedir` = this repository,
-`bindir` = the input binaries, `workdir` = a new run directory), then submit from anywhere:
+`bindir` = the input binaries, `workdir` = a new run directory), then submit:
 
 ```bash
 sbatch run_spinup.sh
 ```
 
 This runs 100 years at `tau_max` = 0.4 from rest (the reference T/S profiles in
-`input/data`), writing a pickup every year and no snapshots. It took ~57 hours on 64 cores.
+`input/data`), writing a pickup every year and no snapshots. 
 
 ## 5. Scenario runs
 
